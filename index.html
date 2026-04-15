@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Colour Sort — A colour-based ball sorting puzzle. Sort coloured balls into tubes by colour. Challenging, relaxing, and beautifully animated." />
+  <title>Colour Sort — Ball Puzzle Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       GAME HUD — Full-viewport-width fixed navbar.
+       Shown/hidden by GameScene.js; hidden while menu/victory is active.
+  ════════════════════════════════════════════════════════════════════ -->
+  <nav id="game-hud" class="ghud-hidden" aria-label="Game navigation">
+
+    <!-- LEFT: Back to menu -->
+    <div class="ghud-zone ghud-zone--left">
+      <button id="ghud-menu-btn" class="ghud-menubtn" type="button">
+        <span class="ghud-menubtn__arrow">←</span>
+        <span class="ghud-menubtn__label">MENU</span>
+      </button>
+    </div>
+
+    <!-- CENTRE: Difficulty badge -->
+    <div class="ghud-zone ghud-zone--centre">
+      <div id="ghud-badge" class="ghud-badge">
+        <span id="ghud-badge-dot"   class="ghud-badge__dot"></span>
+        <span id="ghud-badge-label" class="ghud-badge__label">EASY</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Stats + action buttons -->
+    <div class="ghud-zone ghud-zone--right">
+      <div class="ghud-stat">
+        <span class="ghud-stat__label">MOVES</span>
+        <span id="ghud-moves" class="ghud-stat__value">0</span>
+      </div>
+      <div class="ghud-divider"></div>
+      <div class="ghud-stat">
+        <span class="ghud-stat__label">TIME</span>
+        <span id="ghud-time"  class="ghud-stat__value">0:00</span>
+      </div>
+      <div class="ghud-divider"></div>
+      <button id="ghud-undo-btn"  class="ghud-btn ghud-btn--undo"  type="button">↩ UNDO</button>
+      <button id="ghud-reset-btn" class="ghud-btn ghud-btn--reset" type="button">↺ RESET</button>
+    </div>
+
+  </nav><!-- #game-hud -->
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       PREMIUM MENU OVERLAY — pure HTML/CSS, sits above the Phaser canvas.
+       Shown by MenuScene.js; hidden when gameplay is active.
+  ════════════════════════════════════════════════════════════════════ -->
+  <div id="menu-overlay" class="menu-hidden">
+
+    <!-- Ambient glow orbs -->
+    <div class="morb morb-1" aria-hidden="true"></div>
+    <div class="morb morb-2" aria-hidden="true"></div>
+    <div class="morb morb-3" aria-hidden="true"></div>
+    <div class="morb morb-4" aria-hidden="true"></div>
+    <div class="title-halo"  aria-hidden="true"></div>
+
+    <!-- Main centred panel -->
+    <main id="menu-panel">
+
+      <!-- ── Title block ─────────────────────────────── -->
+      <header class="mhdr">
+        <span class="mhdr__sub">Puzzle&#8202;Game</span>
+        <h1   class="mhdr__title">Colour Sort</h1>
+        <div  class="mhdr__balls" aria-hidden="true">
+          <span class="mball" style="--bc:#FF4757;--bs:rgba(255,71,87,.55)"></span>
+          <span class="mball" style="--bc:#2196F3;--bs:rgba(33,150,243,.55)"></span>
+          <span class="mball" style="--bc:#00E676;--bs:rgba(0,230,118,.55)"></span>
+          <span class="mball" style="--bc:#FFC107;--bs:rgba(255,193,7,.55)"></span>
+          <span class="mball" style="--bc:#CE93D8;--bs:rgba(206,147,216,.55)"></span>
+        </div>
+      </header>
+
+      <!-- ── Difficulty selector ─────────────────────── -->
+      <section class="diff-section">
+        <p class="diff-label">Select Difficulty</p>
+
+        <!-- EASY -->
+        <div class="card-wrap" id="cwrap-easy">
+          <button class="dcard dcard--easy" data-difficulty="easy">
+            <span class="dcard__accent dcard__accent--easy"></span>
+            <div class="dcard__inner">
+              <div class="dcard__text">
+                <span class="dcard__name">Easy</span>
+                <span class="dcard__desc">4 colours &bull; 5 tubes</span>
+              </div>
+              <span class="dcard__score" id="badge-easy">—</span>
+            </div>
+            <div class="dcard__border dcard__border--easy"></div>
+            <div class="dcard__glow  dcard__glow--easy"  aria-hidden="true"></div>
+          </button>
+        </div>
+
+        <!-- MEDIUM -->
+        <div class="card-wrap" id="cwrap-medium">
+          <button class="dcard dcard--medium" data-difficulty="medium">
+            <span class="dcard__accent dcard__accent--medium"></span>
+            <div class="dcard__inner">
+              <div class="dcard__text">
+                <span class="dcard__name">Medium</span>
+                <span class="dcard__desc">5 colours &bull; 6 tubes</span>
+              </div>
+              <span class="dcard__score" id="badge-medium">—</span>
+            </div>
+            <div class="dcard__border dcard__border--medium"></div>
+            <div class="dcard__glow  dcard__glow--medium" aria-hidden="true"></div>
+          </button>
+        </div>
+
+        <!-- HARD -->
+        <div class="card-wrap" id="cwrap-hard">
+          <button class="dcard dcard--hard" data-difficulty="hard">
+            <span class="dcard__accent dcard__accent--hard"></span>
+            <div class="dcard__inner">
+              <div class="dcard__text">
+                <span class="dcard__name">
+                  Hard
+                  <span class="dcard__tag">Challenging</span>
+                </span>
+                <span class="dcard__desc">5 colours &bull; 6 tubes &bull; max entropy</span>
+              </div>
+              <span class="dcard__score" id="badge-hard">—</span>
+            </div>
+            <div class="dcard__border dcard__border--hard"></div>
+            <div class="dcard__glow  dcard__glow--hard"  aria-hidden="true"></div>
+          </button>
+        </div>
+      </section>
+
+      <p class="menu-hint">Tap a tube to select &middot; Tap another to move</p>
+    </main>
+  </div><!-- #menu-overlay -->
+
+  <!-- Phaser 3 via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+  <!-- Game modules — load order is critical (no ES modules to avoid CORS) -->
+  <script src="src/constants.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/logic/MoveEngine.js"></script>
+  <script src="src/logic/PuzzleGenerator.js"></script>
+  <script src="src/logic/ScoreEngine.js"></script>
+  <script src="src/rendering/AnimationEngine.js"></script>
+  <script src="src/rendering/TubeRenderer.js"></script>
+  <script src="src/scenes/BootScene.js"></script>
+  <script src="src/scenes/MenuScene.js"></script>
+  <script src="src/scenes/GameScene.js"></script>
+  <script src="src/scenes/VictoryScene.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>

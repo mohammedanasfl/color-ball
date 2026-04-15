@@ -1,0 +1,643 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   COLOUR SORT — Global Stylesheet
+   Dark premium theme  |  Purple neon accent  |  Laptop-first
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #060610;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+/* ── Phaser Game Container ───────────────────────────────────────────────── */
+#game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #060610;
+}
+
+#game-container canvas {
+  display: block;
+  max-width: 100vw;
+  max-height: 100dvh;
+  image-rendering: auto;
+}
+
+::-webkit-scrollbar { display: none; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MENU OVERLAY — Premium dark UI over the Phaser canvas
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Overlay container ───────────────────────────────────────────────────── */
+#menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  /* Multi-layer dark-purple background */
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%,  rgba(90,55,220,.42) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 42% at 85% 95%,  rgba(55,25,150,.28) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at  8% 70%,  rgba(70,35,180,.18) 0%, transparent 55%),
+    linear-gradient(170deg, #0d0d20 0%, #09091a 45%, #060610 100%);
+
+  /* Fade transition */
+  opacity: 1;
+  transition: opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+}
+
+#menu-overlay.menu-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* ── Ambient glow orbs (blurred circles drifting in background) ─────────── */
+.morb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.morb-1 {
+  width: 540px; height: 540px;
+  background: radial-gradient(circle, rgba(108,92,231,.30) 0%, transparent 68%);
+  filter: blur(72px);
+  top: -20%; left: -12%;
+  animation: morbDrift 10s ease-in-out infinite;
+}
+.morb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(162,155,254,.20) 0%, transparent 68%);
+  filter: blur(64px);
+  bottom: -5%; right: -10%;
+  animation: morbDrift 13s ease-in-out infinite reverse;
+}
+.morb-3 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(80,50,200,.17) 0%, transparent 68%);
+  filter: blur(56px);
+  top: 52%; left: 4%;
+  animation: morbDrift 16s ease-in-out infinite 3s;
+}
+.morb-4 {
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(231,76,60,.09) 0%, transparent 68%);
+  filter: blur(48px);
+  top: 18%; right: 8%;
+  animation: morbDrift 12s ease-in-out infinite 1.5s reverse;
+}
+
+@keyframes morbDrift {
+  0%,  100% { transform: translate( 0px,   0px) scale(1.00); }
+  30%        { transform: translate(22px, -26px) scale(1.05); }
+  65%        { transform: translate(-14px, 18px) scale(0.96); }
+}
+
+/* Soft radial glow behind the title */
+.title-halo {
+  position: absolute;
+  width: 620px; height: 300px;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(108,92,231,.17) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+
+/* ── Main panel (centred column) ─────────────────────────────────────────── */
+#menu-panel {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 430px;
+  padding: 10px 0 16px;
+}
+
+
+/* ── Title / Header ──────────────────────────────────────────────────────── */
+.mhdr {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.mhdr__sub {
+  display: block;
+  font-family: 'Orbitron', 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 6px;
+  color: rgba(162,155,254,.60);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.mhdr__title {
+  font-family: 'Orbitron', 'Outfit', sans-serif;
+  font-size: 54px;
+  font-weight: 900;
+  line-height: 1.06;
+  text-align: center;
+
+  /* Gradient text: white → violet */
+  background: linear-gradient(145deg, #ffffff 5%, #c8bfff 42%, #8b7cf8 82%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Neon glow — animates */
+  filter:
+    drop-shadow(0 0 22px rgba(108,92,231,.58))
+    drop-shadow(0 0 64px rgba(108,92,231,.20));
+  animation: titleGlow 3.8s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes titleGlow {
+  0%,  100% {
+    filter:
+      drop-shadow(0 0 18px rgba(108,92,231,.52))
+      drop-shadow(0 0 52px rgba(108,92,231,.17));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 30px rgba(108,92,231,.82))
+      drop-shadow(0 0 76px rgba(108,92,231,.32));
+  }
+}
+
+/* Floating coloured balls under the title */
+.mhdr__balls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.mball {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.72), var(--bc) 58%);
+  box-shadow: 0 0 10px var(--bs), 0 3px 8px rgba(0,0,0,.55);
+  animation: mballBounce 1.5s ease-in-out infinite;
+}
+.mball:nth-child(1) { animation-delay:   0ms; }
+.mball:nth-child(2) { animation-delay: 150ms; }
+.mball:nth-child(3) { animation-delay: 300ms; }
+.mball:nth-child(4) { animation-delay: 450ms; }
+.mball:nth-child(5) { animation-delay: 600ms; }
+
+@keyframes mballBounce {
+  0%,  100% { transform: translateY(0px);  }
+  45%        { transform: translateY(-9px); }
+}
+
+
+/* ── Difficulty section ──────────────────────────────────────────────────── */
+.diff-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-label {
+  font-family: 'Orbitron', 'Outfit', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 4px;
+  color: rgba(162,155,254,.36);
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+
+/* ── Card wrappers (handle entrance slide-in via JS class toggle) ─────────── */
+.card-wrap {
+  opacity: 0;
+  transform: translateX(38px);
+  transition:
+    opacity  0.44s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 11px;
+}
+.card-wrap.menu-enter {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* ── Difficulty card (<button>) ──────────────────────────────────────────── */
+.dcard {
+  position: relative;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 18px;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+
+  /* Hover / active interactions */
+  transition: transform 0.20s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dcard:hover  { transform: scale(1.028); }
+.dcard:active { transform: scale(0.962); transition-duration: 0.07s; transition-timing-function: ease-in; }
+
+
+/* Left accent stripe */
+.dcard__accent {
+  display: block;
+  position: absolute;
+  left: 0; top: 10px; bottom: 10px;
+  width: 4px;
+  border-radius: 0 3px 3px 0;
+  z-index: 4;
+}
+.dcard__accent--easy   { background: linear-gradient(180deg, #2ECC71, #00b894); box-shadow: 0 0 12px rgba(46,204,113,.70); }
+.dcard__accent--medium { background: linear-gradient(180deg, #F39C12, #e17055); box-shadow: 0 0 12px rgba(243,156,18,.70); }
+.dcard__accent--hard   { background: linear-gradient(180deg, #E74C3C, #b03025); box-shadow: 0 0 12px rgba(231,76,60,.70); }
+
+
+/* Glassmorphism inner panel */
+.dcard__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px 16px 22px;
+  background: rgba(255,255,255,.038);
+  border: 1.5px solid rgba(255,255,255,.085);
+  border-radius: 18px;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  transition: background 0.22s ease, border-color 0.22s ease;
+  gap: 12px;
+}
+
+.dcard:hover .dcard__inner {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.16);
+}
+
+
+/* Card text block */
+.dcard__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dcard__name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ece8ff;
+  letter-spacing: 0.25px;
+}
+
+.dcard__desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  color: rgba(185,178,255,.42);
+  letter-spacing: 0.2px;
+}
+
+
+/* Score badge pill */
+.dcard__score {
+  flex-shrink: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: rgba(200,195,255,.52);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.09);
+  padding: 5px 13px;
+  border-radius: 24px;
+  white-space: nowrap;
+}
+
+
+/* "CHALLENGING" micro-badge on Hard */
+.dcard__tag {
+  font-family: 'Orbitron', 'Outfit', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #ff7070;
+  background: rgba(231,76,60,.12);
+  border: 1px solid rgba(231,76,60,.32);
+  padding: 2px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+
+/* Glow border (outside the card — brightens on hover) */
+.dcard__border {
+  position: absolute;
+  inset: -1px;
+  border-radius: 19px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.25s ease;
+}
+.dcard__border--easy   { box-shadow: 0 0 20px 3px rgba(46,204,113,.32),  inset 0 0 0 1.5px rgba(46,204,113,.48); }
+.dcard__border--medium { box-shadow: 0 0 20px 3px rgba(243,156,18,.32),  inset 0 0 0 1.5px rgba(243,156,18,.48); }
+.dcard__border--hard   { box-shadow: 0 0 20px 4px rgba(231,76,60,.38),   inset 0 0 0 1.5px rgba(231,76,60,.55); }
+.dcard:hover .dcard__border { opacity: 1; }
+
+
+/* Hard-mode pulsing overlay glow */
+.dcard__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+.dcard__glow--hard {
+  box-shadow: inset 0 0 0 1.5px rgba(231,76,60,.28);
+  animation: hardPulse 2.8s ease-in-out infinite;
+}
+@keyframes hardPulse {
+  0%,  100% { opacity: .18; }
+  50%        { opacity: .65; }
+}
+
+/* Hard card subtle tint */
+.dcard--hard .dcard__inner           { background: rgba(231,76,60,.032); }
+.dcard--hard:hover .dcard__inner     { background: rgba(231,76,60,.075); }
+
+
+/* ── Footer hint ─────────────────────────────────────────────────────────── */
+.menu-hint {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  color: rgba(162,155,254,.26);
+  text-align: center;
+  margin-top: 18px;
+  letter-spacing: 0.3px;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GAME HUD — Full-viewport-width fixed navbar
+   Matches the premium dark purple menu theme exactly.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#game-hud {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 72px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+
+  /* Dark purple glass — same palette as menu overlay */
+  background: linear-gradient(180deg,
+    rgba(18, 12, 38, 0.97) 0%,
+    rgba(10,  7, 22, 0.97) 100%);
+
+  /* Bottom separator: glowing purple line */
+  border-bottom: 1px solid rgba(108,92,231, 0.38);
+
+  /* Outer shadow for depth */
+  box-shadow:
+    0 1px 0   rgba(255,255,255, 0.04),
+    0 6px 36px rgba(0,0,0, 0.70),
+    0 0   0 1px rgba(108,92,231, 0.10);
+
+  /* Show/hide transition */
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.30s ease, transform 0.30s ease;
+  pointer-events: all;
+}
+
+#game-hud.ghud-hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Purple shimmer line at very top edge */
+#game-hud::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(108,92,231, 0.55) 25%,
+    rgba(162,155,254, 0.85) 50%,
+    rgba(108,92,231, 0.55) 75%,
+    transparent 100%);
+}
+
+/* Soft ambient glow bleeding below the bar */
+#game-hud::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 8%; right: 8%;
+  height: 8px;
+  background: radial-gradient(ellipse, rgba(108,92,231, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Three-zone flex layout ────────────────────────────────────────────── */
+.ghud-zone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ghud-zone--left   { flex: 0 0 auto; }
+.ghud-zone--centre { flex: 1; justify-content: center; }
+.ghud-zone--right  { flex: 0 0 auto; gap: 10px; }
+
+/* ── Menu button (purple glass pill) ─────────────────────────────────── */
+.ghud-menubtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 18px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(108,92,231, 0.42);
+  background: rgba(108,92,231, 0.11);
+  cursor: pointer;
+  outline: none;
+  /* Inner top shimmer */
+  box-shadow: inset 0 1px 0 rgba(255,255,255, 0.07);
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ghud-menubtn:hover {
+  background: rgba(108,92,231, 0.26);
+  border-color: rgba(108,92,231, 0.82);
+  box-shadow: 0 0 16px rgba(108,92,231, 0.32), inset 0 1px 0 rgba(255,255,255, 0.07);
+}
+.ghud-menubtn:active { transform: scale(0.96); }
+
+.ghud-menubtn__arrow {
+  font-size: 14px;
+  color: #a29bfe;
+}
+.ghud-menubtn__label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #a29bfe;
+}
+
+/* ── Difficulty badge pill ( color set via --badge-rgb JS ) ───────────── */
+.ghud-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 22px;
+  height: 38px;
+  border-radius: 19px;
+  background: rgba(var(--badge-rgb, 108,92,231), 0.14);
+  border: 1.5px solid rgba(var(--badge-rgb, 108,92,231), 0.68);
+  box-shadow:
+    0 0 20px rgba(var(--badge-rgb, 108,92,231), 0.20),
+    inset 0 1px 0 rgba(255,255,255, 0.07);
+}
+.ghud-badge__dot {
+  display: block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgb(var(--badge-rgb, 108,92,231));
+  box-shadow: 0 0 9px rgba(var(--badge-rgb, 108,92,231), 0.85);
+  flex-shrink: 0;
+}
+.ghud-badge__label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgb(var(--badge-rgb, 162,155,254));
+  text-shadow: 0 0 14px rgba(var(--badge-rgb, 108,92,231), 0.65);
+}
+
+/* ── Stat cards ──────────────────────────────────────────────────────── */
+.ghud-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 16px;
+  height: 46px;
+  border-radius: 10px;
+  background: rgba(108,92,231, 0.07);
+  border: 1px solid rgba(108,92,231, 0.22);
+  min-width: 66px;
+}
+.ghud-stat__label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: rgba(162,155,254, 0.50);
+  text-transform: uppercase;
+}
+.ghud-stat__value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #e8e4ff;
+  line-height: 1;
+}
+
+/* ── Vertical divider ────────────────────────────────────────────────── */
+.ghud-divider {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(180deg,
+    transparent,
+    rgba(108,92,231, 0.35) 30%,
+    rgba(108,92,231, 0.35) 70%,
+    transparent);
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────── */
+.ghud-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255,255,255, 0.85);
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  outline: none;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255,255,255, 0.06);
+}
+.ghud-btn:active { transform: scale(0.95); }
+
+.ghud-btn--undo {
+  background: rgba(108,92,231, 0.12);
+  border-color: rgba(108,92,231, 0.42);
+}
+.ghud-btn--undo:hover {
+  background: rgba(108,92,231, 0.28);
+  border-color: rgba(108,92,231, 0.88);
+  box-shadow: 0 0 14px rgba(108,92,231, 0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.ghud-btn--reset {
+  background: rgba(225,112,85, 0.12);
+  border-color: rgba(225,112,85, 0.42);
+}
+.ghud-btn--reset:hover {
+  background: rgba(225,112,85, 0.28);
+  border-color: rgba(225,112,85, 0.88);
+  box-shadow: 0 0 14px rgba(225,112,85, 0.24), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
