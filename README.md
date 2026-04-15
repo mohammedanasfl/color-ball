@@ -68,6 +68,56 @@ All modules publish to `window.*` and are accessed as globals by later scripts.
 
 ---
 
+## ⚙️ Where Phaser Is Used
+
+Phaser powers the full in-game canvas experience, while HTML/CSS is used for the outer interface.
+
+### Phaser responsibilities
+- **Scene flow:** Boot, Menu, Game, and Victory scenes
+- **Canvas rendering:** backgrounds, glass tubes, balls, glow effects, confetti
+- **Input handling:** click / tap interaction on tubes and buttons inside the canvas
+- **Tween animations:** lift, travel, drop, shake, pulse, fade, and celebration effects
+- **Camera effects:** fade-in and fade-out transitions between scenes
+- **Timing:** delayed calls, animation timing, and game-loop updates
+
+### HTML/CSS responsibilities
+- **Top HUD bar** for moves, timer, menu, undo, and reset
+- **Menu overlay styling** with premium glassmorphism look
+- **Responsive page layout** outside the game canvas
+
+So the game logic and motion are handled by Phaser, while the polished app shell uses HTML and CSS.
+
+---
+
+## 🎞️ Animation System
+
+Animation is handled mainly by **Phaser Tweens** through the animation layer.
+
+### Ball movement animation
+The main ball move uses a strict 3-step path:
+
+1. **Lift** — the ball rises straight upward above every tube
+2. **Travel** — it moves horizontally across the board at a fixed air height
+3. **Drop** — it falls straight down into the destination tube with a bounce
+
+This is implemented to make movement feel clear and realistic, while also preventing the ball from visually clipping through tube walls.
+
+### Other animations used in the app
+- **Tube shake** for invalid moves
+- **Completion pulse** when a tube is fully solved
+- **Confetti burst** on the result screen
+- **Scene fades** when entering menu, game, or victory screens
+- **Score count-up** animation on the result page
+- **Menu / victory UI glow** for a more premium game feel
+
+Main animation-related files:
+- `src/rendering/AnimationEngine.js`
+- `src/rendering/TubeRenderer.js`
+- `src/scenes/BootScene.js`
+- `src/scenes/VictoryScene.js`
+
+---
+
 ## 🧩 Puzzle Generation Algorithm
 
 ### Core Invariants
@@ -170,12 +220,12 @@ Space: **O(n²)** for the tubes array. Undo stack: O(n² × undoCount).
 
 ## 🎨 Visual Design
 
-- **Rendering:** Phaser 3 WebGL (Canvas fallback) on a 480×780 design canvas  
-- **Scaling:** `Phaser.Scale.FIT` — pixel-perfect on any resolution  
-- **Ball textures:** Procedural 3D spheres (radial gradient + specular highlight) via Web Canvas API  
-- **Tubes:** Phaser Graphics — glassmorphic rounded rectangles with shine  
-- **Animations:** 3-phase tween (lift → travel → drop with Bounce ease)  
-- **Audio:** Web Audio API oscillator synthesis — zero external .mp3 files  
+- **Rendering:** Phaser 3 WebGL with Canvas fallback for broad browser support  
+- **Scaling:** Phaser scale-fit layout for desktop and mobile screens  
+- **Ball textures:** Procedural 3D spheres generated in the boot scene using the Canvas API  
+- **Tubes:** Custom Phaser Graphics drawing for the glass-cylinder look  
+- **Animations:** Tween-based motion, bounce landing, hover feedback, score reveals, and confetti  
+- **Audio:** Web Audio API oscillator synthesis with zero external sound files  
 
 ---
 
