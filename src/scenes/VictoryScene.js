@@ -1,6 +1,6 @@
 /**
  * VictoryScene.js
- * Win screen — premium dark theme.
+ * Win screen ï¿½ premium dark theme.
  */
 class VictoryScene extends Phaser.Scene {
   constructor() {
@@ -32,7 +32,7 @@ class VictoryScene extends Phaser.Scene {
     glowFx.fillEllipse(W / 2, H / 2, 800, 500);
 
     // Card
-    const cardW = 360, cardH = 420;
+    const cardW = 372, cardH = 468;
     const cardX = W / 2 - cardW / 2;
     const cardY = H / 2 - cardH / 2;
 
@@ -71,32 +71,37 @@ class VictoryScene extends Phaser.Scene {
       letterSpacing: 2,
     }).setOrigin(0.5);
 
-    // Star rating
+    // Rating pips
     const stars = sr.total >= 80 ? 3 : sr.total >= 50 ? 2 : 1;
     for (let s = 0; s < 3; s++) {
       const filled = s < stars;
-      const sx     = W / 2 + (s - 1) * 46;
-      const star   = this.add.text(sx, cardY + 100, '?', {
-        fontFamily: 'Outfit, sans-serif',
-        fontSize:   '34px',
-        color:      filled ? '#FFD700' : '#1e2040',
-        shadow: filled ? { offsetX: 0, offsetY: 0, color: '#ffb400', blur: 14, fill: true } : undefined,
-      }).setOrigin(0.5).setAlpha(0);
+      const sx     = W / 2 + (s - 1) * 56;
 
-      this.tweens.add({
-        targets: star, alpha: 1, scaleX: 1.35, scaleY: 1.35,
-        duration: 220, ease: 'Back.easeOut',
-        delay: 280 + s * 120,
-        onComplete: () => {
-          this.tweens.add({ targets: star, scaleX: 1, scaleY: 1, duration: 100 });
-        },
-      });
+      const pip = this.add.circle(sx, cardY + 102, 10, filled ? 0xFFD700 : 0x24284e, 1)
+        .setAlpha(0)
+        .setScale(0.6);
+
+      if (filled) {
+        const glow = this.add.circle(sx, cardY + 102, 18, 0xffd700, 0.12)
+          .setAlpha(0)
+          .setScale(0.6);
+        this.tweens.add({
+          targets: [pip, glow], alpha: 1, scaleX: 1, scaleY: 1,
+          duration: 220, ease: 'Back.easeOut', delay: 280 + s * 120,
+        });
+      } else {
+        this.tweens.add({
+          targets: pip, alpha: 1, scaleX: 1, scaleY: 1,
+          duration: 220, ease: 'Back.easeOut', delay: 280 + s * 120,
+        });
+      }
     }
 
     if (isNew) {
-      this.add.text(W / 2, cardY + 132, '? New Best Score!', {
+      this.add.text(W / 2, cardY + 132, 'NEW BEST SCORE!', {
         fontFamily: 'Outfit, sans-serif',
         fontSize:   '11px',
+        fontStyle:  'bold',
         color:      '#FFD700',
       }).setOrigin(0.5);
     }
@@ -114,8 +119,8 @@ class VictoryScene extends Phaser.Scene {
       { label: 'Penalty',          value: sr.penalty,    color: '#e17055', sign: '-' },
     ];
 
-    const rowStartY = cardY + 158;
-    const rowH      = 36;
+    const rowStartY = cardY + 162;
+    const rowH      = 33;
 
     rows.forEach((row, i) => {
       const ry = rowStartY + i * rowH;
@@ -150,16 +155,16 @@ class VictoryScene extends Phaser.Scene {
     div.lineBetween(cardX + 28, divY, cardX + cardW - 28, divY);
 
     // Total score
-    this.add.text(cardX + 28, divY + 14, 'TOTAL', {
+    this.add.text(cardX + 28, divY + 12, 'TOTAL', {
       fontFamily: 'Orbitron, Outfit, sans-serif',
       fontSize:   '10px',
       color:      'rgba(162,155,254,0.40)',
       letterSpacing: 3,
     });
 
-    const totalText = this.add.text(cardX + cardW - 28, divY + 10, '0', {
+    const totalText = this.add.text(cardX + cardW - 28, divY + 8, '0', {
       fontFamily: 'Outfit, sans-serif',
-      fontSize:   '32px',
+      fontSize:   '28px',
       fontStyle:  'bold',
       color:      '#c8bfff',
       shadow: { offsetX: 0, offsetY: 0, color: '#6c5ce7', blur: 16, fill: true },
@@ -170,31 +175,45 @@ class VictoryScene extends Phaser.Scene {
       onUpdate: (t) => { totalText.setText(Math.round(t.getValue())); },
     });
 
-    this.add.text(cardX + cardW - 28, divY + 46, '/ 100', {
+    this.add.text(cardX + cardW - 28, divY + 40, '/ 100', {
       fontFamily: 'Outfit, sans-serif',
       fontSize:   '11px',
       color:      'rgba(162,155,254,0.28)',
     }).setOrigin(1, 0);
 
-    // Move + time stats
+    // Footer stats
     const elapsed = sr.elapsedSec || 0;
     const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
     const ss = String(elapsed % 60).padStart(2, '0');
-    this.add.text(W / 2, divY + 66, `${sr.moveCount} moves  ·  ${mm}:${ss}`, {
+    const footerY = cardY + cardH - 86;
+
+    const footerLine = this.add.graphics();
+    footerLine.lineStyle(1, 0xffffff, 0.06);
+    footerLine.lineBetween(cardX + 28, footerY - 16, cardX + cardW - 28, footerY - 16);
+
+    this.add.text(cardX + 28, footerY, `Moves ${sr.moveCount}`, {
       fontFamily: 'Outfit, sans-serif',
       fontSize:   '11px',
-      color:      'rgba(162,155,254,0.28)',
-    }).setOrigin(0.5);
+      fontStyle:  'bold',
+      color:      'rgba(162,155,254,0.42)',
+    }).setOrigin(0, 0.5);
+
+    this.add.text(cardX + cardW - 28, footerY, `Time ${mm}:${ss}`, {
+      fontFamily: 'Outfit, sans-serif',
+      fontSize:   '11px',
+      fontStyle:  'bold',
+      color:      'rgba(162,155,254,0.42)',
+    }).setOrigin(1, 0.5);
 
     // Buttons
-    const btnY = cardY + cardH - 44;
+    const btnY = cardY + cardH - 40;
     this._makeBtn(W / 2 - 84, btnY, 'Play Again', 0x6c5ce7, () => {
       this.cameras.main.fadeOut(260, 10, 12, 22);
       this.cameras.main.once('camerafadeoutcomplete', () => {
         this.scene.start('GameScene', { difficulty: diff });
       });
     });
-    this._makeBtn(W / 2 + 84, btnY, '? Menu', 0x4a6fa5, () => {
+    this._makeBtn(W / 2 + 84, btnY, 'Menu', 0x4a6fa5, () => {
       this.cameras.main.fadeOut(260, 10, 12, 22);
       this.cameras.main.once('camerafadeoutcomplete', () => {
         this.scene.start('MenuScene');
@@ -208,7 +227,7 @@ class VictoryScene extends Phaser.Scene {
   }
 
   _makeBtn(cx, cy, label, color, onClick) {
-    const bw = 140, bh = 40;
+    const bw = 132, bh = 40;
     const gfx = this.add.graphics();
     const draw = (fa, la) => {
       gfx.clear();

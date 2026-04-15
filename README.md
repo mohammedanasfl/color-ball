@@ -1,7 +1,13 @@
 # Colour Sort — Ball Puzzle Game
 
 A production-quality, browser-native ball sorting puzzle built with **pure HTML + CSS + Vanilla JS + Phaser 3**.  
-No React · No TypeScript · No build tool — open `index.html` in a browser (via a local server).
+No React · No TypeScript · No build tool — open `index.html` in a browser through a local or hosted web server.
+
+## 🌐 Live Demo
+
+Play the published version here:
+
+**Render URL:** https://color-ball.onrender.com/
 
 ---
 
@@ -75,8 +81,8 @@ total empty slots = n
 
 | Difficulty | n | Tubes | Approach |
 |---|---|---|---|
-| Easy   | 4 | 5 | Backward generation, depth 14 |
-| Medium | 5 | 6 | Backward generation, depth 35 |
+| Easy   | 4 | 5 | Backward generation, depth 20 + solvability check |
+| Medium | 5 | 6 | Backward generation, depth 55 + solvability check |
 | Hard   | 5 | 6 | Deterministic Latin-square construction |
 
 ---
@@ -98,7 +104,7 @@ total empty slots = n
 3. Output the shuffled state
 ```
 
-**Solvability guarantee:** the player simply reverses the generation moves.  
+**Solvability guarantee:** generated boards are validated with a real solvability search under the same move rules used by the player.  
 **Randomness:** entropy-weighted selection + seeded Mulberry32 PRNG.
 
 ---
@@ -229,3 +235,20 @@ Right-click `index.html` → **Open with Live Server**
 
 > ⚠️ Do **not** open `index.html` directly via `file://` — browsers block  
 > script loading across directories for security reasons.
+
+---
+
+## ☁️ Deployment on Render
+
+This project is deployed as a **Node Web Service** on Render.
+
+### Render configuration
+- **Environment:** Node
+- **Build Command:** `npm install`
+- **Start Command:** `npm start`
+- **Root service file:** `server.js`
+
+### Production URL
+- https://color-ball.onrender.com/
+
+The server reads `process.env.PORT`, so it works both locally and on Render without code changes.
