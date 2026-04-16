@@ -248,21 +248,6 @@ Total          0–100
 
 ---
 
-## ⏱️ Estimated Development Time
-
-| Phase | MVP | Polished |
-|---|---|---|
-| Scaffold + Phaser config | 30 min | 30 min |
-| PuzzleGenerator (all difficulties) | 2 hr | 2.5 hr |
-| MoveEngine + ScoreEngine | 45 min | 45 min |
-| TubeRenderer + AnimationEngine | 1.5 hr | 2.5 hr |
-| MenuScene + VictoryScene | 1 hr | 2 hr |
-| GameScene (state machine + HUD) | 2 hr | 2.5 hr |
-| Audio synthesis | 30 min | 1 hr |
-| README + polish | — | 1 hr |
-| **Total** | **~8 hr** | **~13 hr** |
-
----
 
 ## 🚀 Running the Game
 
